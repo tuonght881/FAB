@@ -37,7 +37,7 @@
                             </ol>
                         </nav>
                         <div class="title">
-                            <h4 th:utext="*{post_title.length() > 50 ? #strings.substring(post_title, 0, 50) : post_title}"></h4>
+                            <h4 th:utext="*{post_title}"></h4>
                             <p th:utext="*{addresss}"></p>
                             <hr class="mb2">
                         </div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-lg-3 col-sm-2">
                                     <p class="mb-1">Diện tích</p>
-                                    <strong class="text-dark"><span th:utext="*{acreage}"></span>/m²</strong>
+                                    <strong class="text-dark"><span th:utext="*{#numbers.formatDecimal(acreage, 0, 'POINT', 0, 'COMMA')}"></span> m²</strong>
                                     <p style="font-size:13px;"></p>
                                 </div>
                                 <div class="col-lg-3 col-sm-5">
@@ -100,8 +100,8 @@
                         </div>
                         <div class="describe">
                             <h5 class="">Thông tin mô tả</h5>
-                            <p th:utext="*{post_content.length() > 50 ? #strings.substring(post_content, 0, 50) : post_content}">
-                            </p>
+                            <h6 th:utext="*{post_content}" style="color: black; font-weight: normal;">
+                            </h6>
                         </div>
                         <div class="characteristic">
                             <h5>Đặc điểm bất động sản</h5>
@@ -117,7 +117,7 @@
                                                 <div class="col-lg-6">Diện tích</div>
 
                                                 <div class="col-lg-5">
-                                                    <div><span th:utext="*{acreage}"></span> m²</div>
+                                                    <div><span th:utext="*{#numbers.formatDecimal(acreage, 0, 'POINT', 0, 'COMMA')}"></span> m²</div>
                                                 </div>
                                         </li>
                                         <li class="list-group-item">

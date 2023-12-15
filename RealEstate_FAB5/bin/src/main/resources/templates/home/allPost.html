@@ -82,7 +82,8 @@
                                         <a class="d-block h5 mb-2" href="/home/detail?id={{p.post_id}}">
                                             {{p.post_title.length > 30 ? (p.post_title | limitTo:30) + '...' : p.post_title}}
                                         </a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{p.addresss.length > 60 ? (p.addresss | limitTo:60) + '...' : p.addresss}}</p>
+                                        
+                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{p.addresss.length > 65 ? (p.addresss | limitTo:65) + '...' : p.addresss}}</p>
                                     </div>
                                     <div class="d-flex border-top">
                                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{p.acreage}} m²</small>
