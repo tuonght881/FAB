@@ -3,11 +3,16 @@
 
     // Spinner
 	var spinner = function() {
-        setTimeout(function() {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
-            }
-        }, 1);
+	    // Hiển thị spinner khi trang đang tải
+	    $('#spinner').addClass('show');
+	
+	    // Đợi cho đến khi toàn bộ trang đã tải xong
+	    window.onload = function() {
+	        // Ẩn spinner khi trang đã tải xong
+	        if ($('#spinner').length > 0) {
+	            $('#spinner').removeClass('show');
+	        }
+	    };
     };
     spinner();
 
