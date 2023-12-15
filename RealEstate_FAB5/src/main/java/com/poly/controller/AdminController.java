@@ -314,7 +314,7 @@ public class AdminController {
 	public String getWalletNew(Model m) {
 		return "redirect:/admin/wallet";
 	}
-
+//
 	@RequestMapping("/find/users")
 	public String getWalletList(Model m, @Param("id") String id) {
 		List<Users> u = userService.findAll();
