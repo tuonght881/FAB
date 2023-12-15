@@ -27,8 +27,8 @@
                             <td th:utext="${w.username}"></td>
                             <td th:utext="${w.fullname}"></td>
                             <td th:utext="${w.email}"></td>
-                            <td th:utext="${#numbers.formatDecimal(w.pay_id.pay_money, 0, 'POINT', 0, 'COMMA')}"></td> 
-                            <td><a type="button" th:href="@{/find/users/{username}(username = ${w.username})}" class="btn btn-primary"><i
+                            <td th:utext="${#numbers.formatDecimal(w.pay_id.pay_money, 0, 'POINT', 0, 'COMMA')}"></td>
+                            <td><a type="button" th:href="@{/find/users(id = ${w.username})}" class="btn btn-primary"><i
 									class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>
 									Chi tiết</a></td>
                         </tr>

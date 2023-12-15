@@ -90,7 +90,7 @@ public class HomeController {
 			}
 		}
 		m.addAttribute("typeProperty", typeService.findSelectTop8());
-		return "/home/index";
+		return "home/index";
 	}
 	// Home Page
 	

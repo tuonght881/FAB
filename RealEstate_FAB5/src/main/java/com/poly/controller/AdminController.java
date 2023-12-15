@@ -182,14 +182,14 @@ public class AdminController {
 		return "redirect:/admin/users";
 	}
 
-	@RequestMapping("/admin/user/findBy/{username}")
-	public String getUsers(Model m, @PathVariable String username, @RequestParam(defaultValue = "1") int page) {
+	@RequestMapping("/admin/user/findBy")
+	public String getUsers(Model m, @Param("id") String id, @RequestParam(defaultValue = "1") int page) {
 		Users u = ss.getAttribute("user");
 		Pageable pageable = PageRequest.of(page - 1, 4);
 		Page<Users> users = userService.findAll(u.getUsername(), pageable);
 
 		m.addAttribute("users", users);
-		m.addAttribute("u", userService.findById(username));
+		m.addAttribute("u", userService.findById(id));
 		return "admin/users";
 	}
 
@@ -289,8 +289,8 @@ public class AdminController {
 		return "admin/transactions";
 	}
 
-	@RequestMapping("/admin/transaction/findBy/{id}")
-	public String getTransactions(Model m, @PathVariable("id") Integer id, @RequestParam(defaultValue = "1") int page) {
+	@RequestMapping("/admin/transaction/findBy")
+	public String getTransactions(Model m, @Param("id") Integer id, @RequestParam(defaultValue = "1") int page) {
 		Pageable pageable = PageRequest.of(page - 1, 4);
 		Page<DetailTransactions> detailTransactions = detailTransactionService.findAll(pageable);
 		m.addAttribute("transactions", detailTransactions);
@@ -315,12 +315,12 @@ public class AdminController {
 		return "redirect:/admin/wallet";
 	}
 
-	@RequestMapping("/find/users/{id}")
-	public String getWalletList(Model m, @PathVariable("id") String username) {
+	@RequestMapping("/find/users")
+	public String getWalletList(Model m, @Param("id") String id) {
 		List<Users> u = userService.findAll();
 		m.addAttribute("pays", u);
 
-		Users user = userService.findById(username);
+		Users user = userService.findById(id);
 		m.addAttribute("user", user);
 		return "admin/wallet";
 	}
