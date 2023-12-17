@@ -201,7 +201,7 @@ public class AdminController {
 		Ranks r = rankService.findById(us.getRanks_id().getRanks_id());
 		u.setPay_id(p);
 		u.setRanks_id(r);
-		u.setActive(true);
+//		u.setActive(true);
 		userService.update(u);
 		m.addAttribute("u", userService.findById(u.getUsername()));
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
