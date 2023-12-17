@@ -154,6 +154,7 @@ public class AccountController {
 	// Đăng nhập
 	@GetMapping("/login")
 	public String getLogin() {
+		
 		return "account/login";
 	}
 
@@ -177,6 +178,7 @@ public class AccountController {
 			if(chkPass == false) {
 					m.addAttribute("visible", "true");
 					m.addAttribute("thongbao", "Sai mật khẩu");
+					m.addAttribute("username", u.getUsername());
 					u.setFail_login(u.getFail_login()+1);
 					userService.update(u);
 				return "account/login";

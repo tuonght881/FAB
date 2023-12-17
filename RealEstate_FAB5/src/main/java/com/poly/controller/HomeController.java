@@ -214,7 +214,8 @@ public class HomeController {
 		String content = paramService.getString("content", "");
 		String phone = paramService.getString("phone", "");
 		
-		String phoneVN = "+84" + phone.substring(1);
+//		String phoneVN = "+84" + phone.substring(1);
+		String phoneVN = "+84838565542";
 		String body = "Xin chào anh, tôi là " + fullName + ", " + content;
 		smsService.sendSms(phoneVN, body);
 		Post p = ss.getAttribute("post_id");
