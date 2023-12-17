@@ -45,7 +45,7 @@
 
                             <td th:utext="${u.active ? 'Hoạt động':'Ngừng hoạt động'}"></td>
                             <td class="d-flex">
-                                <a type="button" th:href="@{/admin/user/findBy/{username}(username=${u.username})}" class="btn btn-primary">
+                                <a type="button" th:href="@{/admin/user/findBy(id=${u.username})}" class="btn btn-primary">
                                     <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;">
                                     </i> Chi tiết
                                 </a>

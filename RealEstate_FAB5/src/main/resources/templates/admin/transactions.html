@@ -30,7 +30,7 @@
                             <td th:utext="${t.fullname_get}">Lucas</td>
                             <td th:utext="${t.transactions_type ? 'Nạp tiền':'Đăng bài'}"></td>
                             <td th:style="${t.transactions_type ? 'color: green': 'color: red'}" th:utext="${#numbers.formatDecimal(t.price, 0, 'POINT', 0, 'COMMA')}"></td>
-                            <td><a type="button" th:href="@{/admin/transaction/findBy/{id}(id=${t.detail_id})}" class="btn btn-primary"><i
+                            <td><a type="button" th:href="@{/admin/transaction/findBy(id=${t.detail_id})}" class="btn btn-primary"><i
 									class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>
 									Chi tiết</a></td>
                         </tr>
@@ -55,7 +55,7 @@
             </div>
 
             <div class="col-lg-12 mb-3">
-                <form action="/admin/transactions" method="get" class="form-edit-user-list" th:object="${transaction}">
+                <form action="/admin/transactions" id="postForm" method="get" class="form-edit-user-list" th:object="${transaction}">
                     <div class="mb-3 mt-2 mr-2 d-flex justify-content-end">
                         <div class="input-wrapper">
                             <button class="icon" type="button">
