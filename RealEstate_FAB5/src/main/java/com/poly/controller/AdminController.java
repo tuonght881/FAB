@@ -204,16 +204,16 @@ public class AdminController {
 		u.setActive(true);
 		userService.update(u);
 		m.addAttribute("u", userService.findById(u.getUsername()));
-		return "redirect:/admin/user/findBy/" + u.getUsername();
+		return "redirect:/admin/user/findBy?id=" + u.getUsername();
 	}
 
-	@RequestMapping("/admin/user/delete/{username}")
-	public String setAccountUser(Model m, @PathVariable String username) {
-		Users u = userService.findById(username);
+	@RequestMapping("/admin/user/delete")
+	public String setAccountUser(Model m, @Param("id") String id) {
+		Users u = userService.findById(id);
 		u.setActive(false);
 		u.setCreate_block(new Date());
 		userService.update(u);
-		return "redirect:/admin/user/findBy/" + u.getUsername();
+		return "redirect:/admin/user/findBy?id=" + u.getUsername();
 	}
 	// User List
 

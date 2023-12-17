@@ -407,21 +407,23 @@ public class HomeController {
 	@RequestMapping("/home/manager/post-deadline-extension-action")
 	public String setPostDeadlineExtensionAction(Model m, @RequestParam("id") Integer id) {
 		LocalDate now = LocalDate.now();
-		LocalDate lastDay = now.plusDays(7);
+		
 		
 		Post p = postService.getFindByid(id);
 		Users u = ss.getAttribute("user");
 		Users uFind = userService.findById(u.getUsername());
+		
 		long diffInMillies = Math.abs(p.getEnd_date().getTime() - p.getCreate_at().getTime());
         long daysDiff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         
 		double money = (p.getServices_id().getServices_price() * 1000) * daysDiff;
+		LocalDate lastDay = now.plusDays(daysDiff);
+		
 		double total = uFind.getPay_id().getPay_money() - money;
 		if(uFind.getPay_id().getPay_money() >= money) {
+			p.setCreate_at(new Date());
 			p.setActive(true);
 			p.setEnd_date(Date.from(lastDay.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			
-			
 			
 			uFind.getPay_id().setPay_money((long) total);
 			
