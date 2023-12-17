@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				username -> {
 				try {
 					Users user = userService.findById(username);
+					session.setAttribute("usertemp", username);	
 					//user k ton tai
 					if(user == null) {
 						session.setAttribute("checkUser", false);

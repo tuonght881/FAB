@@ -154,6 +154,7 @@ public class AccountController {
 	// Đăng nhập
 	@GetMapping("/login")
 	public String getLogin() {
+		ss.setAttribute("usertemp", "");	
 		return "account/login";
 	}
 
@@ -162,6 +163,8 @@ public class AccountController {
 	public String loginError(Model m) throws MessagingException {
 		Users u = userService.findByEmailOrPhone(ss.getAttribute("usermail"), null);
 		boolean chkUser = ss.getAttribute("checkUser");
+		String utemp = ss.getAttribute("usertemp");
+		m.addAttribute("usertemp", utemp );
 		if(chkUser == false || ss.getAttribute("checkUser") == null) {
 			m.addAttribute("visible", "true");
 			m.addAttribute("thongbao", "Tên đăng nhập không tồn tại");
