@@ -16,7 +16,7 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 	
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Transactional
-	@Query(value = "update post set deleted_at = 'true' where post_id = ?1", nativeQuery = true)
+	@Query(value = "update post set active = 'false', deleted_at = 'true' where post_id = ?1", nativeQuery = true)
 	public Integer softDeletePost(Integer id);
 	
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -44,6 +44,9 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 	
 	@Query(value="select * from post where active = 'false' and deleted_at = 'false' and users_id = ?1 order by post_id desc", nativeQuery = true)
 	public List<Post> getPostsExpiredUser(String username); 
+	
+	@Query(value="select * from post where active = 'true' and deleted_at = 'false' and users_id = ?1 order by post_id desc", nativeQuery = true)
+	public List<Post> getPostsUser(String username);
 	
 	@Query(value="select top 6 * from post where active = 1 and deleted_at = 0 order by post_id desc", nativeQuery = true)
 	public List<Post> getListPostDesc();

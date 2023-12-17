@@ -67,8 +67,10 @@
                         </div>
                     </div>
                     <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                        <h1 class="mb-4">{{introThePost.post_title.length > 20 ? (introThePost.post_title | limitTo:20) + '...' : introThePost.post_title | uppercase}}</h1>
-                        <p class="mb-4">Mô Tả: {{ introThePost.post_content.length > 50 ? (introThePost.post_content | limitTo:50) + '...' : introThePost.post_content }}</p>
+                        <!-- <h1 class="mb-4">{{introThePost.post_title.length > 20 ? (introThePost.post_title | limitTo:20) + '...' : introThePost.post_title | uppercase}}</h1> -->
+                        <h1 class="mb-4">{{introThePost.post_title}}</h1>
+                        <!-- <p class="mb-4">Mô Tả: {{ introThePost.post_content.length > 50 ? (introThePost.post_content | limitTo:50) + '...' : introThePost.post_content }}</p> -->
+                        <h6 style="font-weight: normal; color: gray;">Mô tả: {{introThePost.post_content}}</h6>
                         <p><i class="fa fa-ruler-combined text-primary me-2"></i> {{introThePost.acreage}} m²</p>
                         <p><i class="fa fa-bed text-primary me-2"></i> {{introThePost.bed}} Phòng ngủ</p>
                         <p><i class="fa fa-bath text-primary me-2"></i> {{introThePost.toilet}} Toilet</p>
