@@ -210,4 +210,10 @@ public class PostServiceImpl implements PostService{
 		return dao.getPostsExpiredUser(username);
 	}
 
+	@Override
+	public List<Post> getPostUser(String username) {
+		// TODO Auto-generated method stub
+		return dao.getPostsUser(username);
+	}
+
 }

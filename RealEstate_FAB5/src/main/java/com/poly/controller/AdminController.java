@@ -228,7 +228,15 @@ public class AdminController {
 		u.setCreate_block(new Date());
 		userService.update(u);
 		ss.setAttribute("err", "Error");
-
+		
+		List<Post> list = postService.getPostUser(u.getUsername());
+		
+		for(Post p : list) {
+			p.setActive(false);
+			p.setDeletedAt(true);
+			postService.Update(p);
+		}
+		
 		ss.setAttribute("title", "Thành công");
 		ss.setAttribute("notification", "Chặn tài khoản thành công");
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
@@ -266,6 +274,19 @@ public class AdminController {
 		m.addAttribute("managerPost", managerPost);
 		return "admin/post";
 	}
+	
+	@RequestMapping("/admin/post-find-by-delete")
+	public String getPostDeleteList(Model m, @Param("id") Integer id, @RequestParam(defaultValue = "1") Integer page) {
+		Pageable pageable = PageRequest.of(page - 1, 4);
+		Page<Post> managerPost = postService.getPostDelete(pageable);
+
+		m.addAttribute("post", postService.getFindByid(id));
+		m.addAttribute("albums", albumsServcie.findAlbumsByPostID(id));
+		
+		
+		m.addAttribute("managerPost", managerPost);
+		return "admin/historyDeletePost";
+	}
 
 	@RequestMapping("/admin/post-find-delete")
 	public String getPostDelete(Model m, @Param("id") Integer id) {
@@ -280,6 +301,7 @@ public class AdminController {
 	@RequestMapping("/admin/post-find-update")
 	public String getPostUpdate(Model m, @Param("id") Integer id) {
 		Post p = postService.getFindByid(id);
+		p.setActive(true);
 		p.setDeletedAt(false);
 		postService.Update(p);
 		ss.setAttribute("err", "Error");

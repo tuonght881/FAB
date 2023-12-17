@@ -19,6 +19,7 @@
                             <th scope="col">Mã giao dịch</th>
                             <th scope="col">Họ và tên</th>
                             <th scope="col">Loại giao dịch</th>
+                            <th scope="col">Ngày giao dịch</th>
                             <th scope="col">Thanh toán</th>
                             <th scope="col"></th>
                         </tr>
@@ -29,6 +30,7 @@
                             <td th:utext="${t.transactions_id.transactions_id}"></td>
                             <td th:utext="${t.fullname_get}">Lucas</td>
                             <td th:utext="${t.transactions_type ? 'Nạp tiền':'Đăng bài'}"></td>
+                            <td th:text="${#dates.format(t.transactions_id.create_at, 'dd-MM-yyyy')}"></td>
                             <td th:style="${t.transactions_type ? 'color: green': 'color: red'}" th:utext="${#numbers.formatDecimal(t.price, 0, 'POINT', 0, 'COMMA')}"></td>
                             <td><a type="button" th:href="@{/admin/transaction/findBy(id=${t.detail_id})}" class="btn btn-primary"><i
 									class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>
