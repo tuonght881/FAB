@@ -102,6 +102,7 @@ public class AdminController {
 			m.addAttribute("notification", ss.getAttribute("notification"));
 			m.addAttribute("users", users);
 			m.addAttribute("u", new Users());
+			ss.setAttribute("err", null);
 			return "admin/users";
 		} else {
 			m.addAttribute("visible", "false");
@@ -118,7 +119,7 @@ public class AdminController {
 		Users uFindEmail = userService.findByEmailOrPhone(email, null);
 		Users uFindPhone = userService.findByEmailOrPhone(null, phone);
 		Users findId = userService.findById(username);
-		
+
 		if (findId != null) {
 			ss.setAttribute("err", "Error");
 
@@ -141,7 +142,7 @@ public class AdminController {
 			Pay newpay = new Pay();
 			newpay.setPay_money((long) 0.00);
 			payService.Create(newpay);
-			
+
 			Pay payFind = payService.findByTop1Desc();
 
 			// rank
@@ -160,7 +161,7 @@ public class AdminController {
 			uAuth.setUsers(u);
 			uAuth.setRoles(roleService.findbyId(role));
 			authService.create(uAuth);
-			
+
 			ss.setAttribute("usermail", u.getEmail());
 
 			// gui mail kich hoat tai khoan
@@ -188,9 +189,20 @@ public class AdminController {
 		Pageable pageable = PageRequest.of(page - 1, 4);
 		Page<Users> users = userService.findAll(u.getUsername(), pageable);
 
-		m.addAttribute("users", users);
-		m.addAttribute("u", userService.findById(id));
-		return "admin/users";
+		if (ss.getAttribute("err") != null) {
+			m.addAttribute("visible", "true");
+			m.addAttribute("title", ss.getAttribute("title"));
+			m.addAttribute("notification", ss.getAttribute("notification"));
+			m.addAttribute("users", users);
+			m.addAttribute("u", userService.findById(id));
+			ss.setAttribute("err", null);
+			return "admin/users";
+		} else {
+			m.addAttribute("visible", "false");
+			m.addAttribute("users", users);
+			m.addAttribute("u", userService.findById(id));
+			return "admin/users";
+		}
 	}
 
 	@PostMapping("/admin/user/update")
@@ -201,9 +213,11 @@ public class AdminController {
 		Ranks r = rankService.findById(us.getRanks_id().getRanks_id());
 		u.setPay_id(p);
 		u.setRanks_id(r);
-//		u.setActive(true);
 		userService.update(u);
 		m.addAttribute("u", userService.findById(u.getUsername()));
+		ss.setAttribute("err", "Error");
+		ss.setAttribute("title", "Thành công");
+		ss.setAttribute("notification", "Cập nhật thành công");
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
 	}
 
@@ -213,6 +227,10 @@ public class AdminController {
 		u.setActive(false);
 		u.setCreate_block(new Date());
 		userService.update(u);
+		ss.setAttribute("err", "Error");
+
+		ss.setAttribute("title", "Thành công");
+		ss.setAttribute("notification", "Chặn tài khoản thành công");
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
 	}
 	// User List
@@ -222,19 +240,20 @@ public class AdminController {
 	public String getPostList(Model m, @RequestParam(defaultValue = "1") Integer page) {
 		Pageable pageable = PageRequest.of(page - 1, 4);
 		Page<Post> managerPost = postService.getPageAll(pageable);
-		if(ss.getAttribute("err") == null) {
+		if (ss.getAttribute("err") == null) {
 			m.addAttribute("post", new Post());
 			m.addAttribute("managerPost", managerPost);
+			
 			return "admin/post";
-		}else {
+		} else {
 			m.addAttribute("visible", "true");
 			m.addAttribute("title", ss.getAttribute("title"));
 			m.addAttribute("notification", ss.getAttribute("notification"));
 			m.addAttribute("post", new Post());
-			m.addAttribute("managerPost", managerPost);
+			m.addAttribute("managerPost", managerPost);ss.setAttribute("err", null);
 			return "admin/post";
 		}
-		
+
 	}
 
 	@RequestMapping("/admin/post-find")
@@ -336,11 +355,11 @@ public class AdminController {
 		Pay p = Pay.findByID(user.getPay_id().getPay_id());
 		p.setPay_money(pay);
 		Pay.Update(p);
-		
+
 		m.addAttribute("visible", "true");
 		m.addAttribute("title", "Thành công");
 		m.addAttribute("notification", "Cập nhật thành công");
-		
+
 		return "admin/wallet";
 	}
 	// Wallet List
@@ -349,26 +368,26 @@ public class AdminController {
 	@RequestMapping("/admin/profile")
 	public String getProfile(Model m) {
 		Users u = ss.getAttribute("user");
-		if(ss.getAttribute("err") == null) {
+		if (ss.getAttribute("err") == null) {
 			m.addAttribute("u", userService.findById(u.getUsername()));
 			return "admin/profile";
-		}else {
+		} else {
 			m.addAttribute("visible", "true");
 			m.addAttribute("title", ss.getAttribute("title"));
 			m.addAttribute("notification", ss.getAttribute("notification"));
 			m.addAttribute("u", userService.findById(u.getUsername()));
+			ss.setAttribute("err", null);
 			return "admin/profile";
 		}
-		
+
 	}
 
 	@RequestMapping("/admin/profile-edit")
-	public String setProfile(Model m, Users u, 
-		@Param("email") String email, @Param("phone") String phone) {
-		
+	public String setProfile(Model m, Users u, @Param("email") String email, @Param("phone") String phone) {
+
 		Users uFindEmail = userService.findByEmailOrPhone(email, null);
 		Users uFindPhone = userService.findByEmailOrPhone(null, phone);
-		
+
 		if (uFindPhone != null) {
 			ss.setAttribute("err", "Error");
 			ss.setAttribute("title", "Lỗi");
@@ -393,7 +412,7 @@ public class AdminController {
 			ss.setAttribute("notification", "Cập nhật thành công");
 			return "redirect:/admin/profile";
 		}
-		
+
 	}
 
 	@RequestMapping("/admin/ChangePass")
@@ -425,13 +444,13 @@ public class AdminController {
 	public String getServicePack(Model m, @RequestParam(defaultValue = "1") Integer page) {
 		Pageable pageable = PageRequest.of(page - 1, 4);
 		Page<ServicePack> service = ServicePackService.getFindAll(pageable);
-		if(ss.getAttribute("err") == null) {
+		if (ss.getAttribute("err") == null) {
 			m.addAttribute("service", service);
 			m.addAttribute("totalNumber", service.getTotalElements());
 			m.addAttribute("visible", "false");
 			return "admin/servicePack";
-		}else {
-			
+		} else {
+
 			m.addAttribute("service", service);
 			m.addAttribute("totalNumber", service.getTotalElements());
 			m.addAttribute("visible", "true");
@@ -439,7 +458,7 @@ public class AdminController {
 			m.addAttribute("notification", ss.getAttribute("notification"));
 			return "admin/servicePack";
 		}
-		
+
 	}
 
 	@PostMapping("/admin/add-service-pack")
@@ -472,22 +491,24 @@ public class AdminController {
 	public String getTypeProperty(Model m, @RequestParam(defaultValue = "1") Integer page) {
 		Pageable pageable = PageRequest.of(page - 1, 6);
 		Page<TypePropertys> typeProperty = typePropertyService.findPageAll(pageable);
-		
-		if(ss.getAttribute("err") == null) {
+
+		if (ss.getAttribute("err") == null) {
 			m.addAttribute("typeProperty", typeProperty);
 			m.addAttribute("totalNumber", typeProperty.getTotalElements());
 			m.addAttribute("visible", "false");
 			return "admin/typePropertys";
-		}else {
-			
+		} else {
+
 			m.addAttribute("typeProperty", typeProperty);
 			m.addAttribute("totalNumber", typeProperty.getTotalElements());
 			m.addAttribute("visible", "true");
 			m.addAttribute("title", ss.getAttribute("title"));
 			m.addAttribute("notification", ss.getAttribute("notification"));
+			ss.setAttribute("err", null);
+			
 			return "admin/typePropertys";
 		}
-		
+
 	}
 
 	@PostMapping("/admin/add-type-property")
