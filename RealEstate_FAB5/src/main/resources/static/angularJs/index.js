@@ -1260,6 +1260,7 @@ app.controller("mycontroller", function($scope, $http, $rootScope, $window) {
 
     $scope.updatePostExpired = function() {
         $scope.post.active = true;
+        $scope.post.end_date = $scope.currentEndDate;
         $http.put('/update-post', $scope.post).then(function(response) {
 
             var transaction = {

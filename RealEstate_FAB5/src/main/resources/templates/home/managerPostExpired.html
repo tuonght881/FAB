@@ -50,13 +50,14 @@
                                     <img th:src="@{'/files/img/' + ${post.albums[0].albums_name}}" class="img-fluid">
                                     <div class="p-2">
                                         <a th:href="@{'/home/detail?id=' + ${post.post_id}}">
-                                            <p class="text-justify">
+                                            Tiêu đề: <h6 style="font-weight: normal;" th:utext="*{post.post_title}"></h6>
+                                            <!-- <p class="text-justify">
                                                 Tiêu đề: <span th:utext="*{post.post_title.length > 25 ? #strings.substring(post.post_title, 0, 25) : post.post_title}"></span>
-                                            </p>
+                                            </p> -->
                                         </a>
 
                                         <p class="text-justify" th:each="money, i : ${totalStep}" th:if="${state.index == i.index}">
-                                            Phí kích hoạt: <span th:text="${#numbers.formatDecimal(money, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
+                                            Phí kích hoạt: <span th:text="${#numbers.formatDecimal(money, 0, 'POINT', 0, 'COMMA')}"></span> VNĐ
                                         </p>
                                         <hr>
                                         <div class="d-flex">
