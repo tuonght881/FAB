@@ -94,7 +94,7 @@ public class AdminController {
 	public String getUsers(Model m, @RequestParam(defaultValue = "1") int page) {
 		Users u = ss.getAttribute("user");
 		Pageable pageable = PageRequest.of(page - 1, 4);
-		Page<Users> users = userService.findAll(u.getUsername(), pageable);
+		Page<Auth> users = authService.getAllUses(u.getUsername(), pageable);
 
 		if (ss.getAttribute("err") != null) {
 			m.addAttribute("visible", "true");
@@ -111,6 +111,29 @@ public class AdminController {
 			return "admin/users";
 		}
 	}
+	
+	@RequestMapping("/admin/list-admin")
+	public String getUsersAdmin(Model m, @RequestParam(defaultValue = "1") int page) {
+		Users u = ss.getAttribute("user");
+		Pageable pageable = PageRequest.of(page - 1, 4);
+		Page<Auth> users = authService.getAllAdmin(u.getUsername(), pageable);
+
+		if (ss.getAttribute("err") != null) {
+			m.addAttribute("visible", "true");
+			m.addAttribute("title", ss.getAttribute("title"));
+			m.addAttribute("notification", ss.getAttribute("notification"));
+			m.addAttribute("users", users);
+			m.addAttribute("u", new Users());
+			ss.setAttribute("err", null);
+			return "admin/users";
+		} else {
+			m.addAttribute("visible", "false");
+			m.addAttribute("users", users);
+			m.addAttribute("u", new Users());
+			return "admin/listAdmin";
+		}
+	}
+
 
 	@PostMapping("/admin/add-user")
 	public String Register(Model m, Users u, @Param("username") String username, @Param("email") String email,
@@ -177,17 +200,88 @@ public class AdminController {
 		}
 
 	}
+	
+	@PostMapping("/admin/add-admin")
+	public String RegisterAdmin(Model m, Users u, @Param("username") String username, @Param("email") String email,
+			@Param("phone") String phone, @Param("role") String role) throws MessagingException {
+
+		Users uFindEmail = userService.findByEmailOrPhone(email, null);
+		Users uFindPhone = userService.findByEmailOrPhone(null, phone);
+		Users findId = userService.findById(username);
+
+		if (findId != null) {
+			ss.setAttribute("err", "Error");
+
+			ss.setAttribute("title", "Lỗi");
+			ss.setAttribute("notification", "Tên đăng nhập đã được đăng ký");
+			return "redirect:/admin/list-admin";
+		} else if (uFindPhone != null) {
+			ss.setAttribute("err", "Error");
+
+			ss.setAttribute("title", "Lỗi");
+			ss.setAttribute("notification", "Số điện thoại đã được đăng ký");
+			return "redirect:/admin/list-admin";
+		} else if (uFindEmail != null) {
+			ss.setAttribute("err", "Error");
+
+			ss.setAttribute("title", "Lỗi");
+			ss.setAttribute("notification", "Email đã được đăng ký");
+			return "redirect:/admin/list-admin";
+		} else {
+			Pay newpay = new Pay();
+			newpay.setPay_money((long) 0.00);
+			payService.Create(newpay);
+
+			Pay payFind = payService.findByTop1Desc();
+
+			// rank
+			Ranks rank = rankService.findById(1);
+
+			String password = paramService.getString("passwords", "");
+
+			u.setPasswords(passwordEncoder.encode(password));
+			u.setPay_id(payFind);
+			u.setRanks_id(rank);
+			u.setActive(true);
+			u.setBirthday(new Date());
+			userService.create(u);
+
+			Auth uAuth = new Auth();
+			uAuth.setUsers(u);
+			uAuth.setRoles(roleService.findbyId(role));
+			authService.create(uAuth);
+
+			ss.setAttribute("usermail", u.getEmail());
+
+			// gui mail kich hoat tai khoan
+			mailService.sendMailConfirm(u.getEmail(), "Kích hoạt tài khoản", u.getFullname(), null);
+			// gui mail kich hoat tai khoan
+
+			ss.setAttribute("err", "Error");
+
+			ss.setAttribute("title", "Thành công");
+			ss.setAttribute("notification", "Thêm tài khoản thành công");
+
+			return "redirect:/admin/list-admin";
+		}
+
+	}
 
 	@RequestMapping("/admin/users-new")
 	public String setUserNew(Model m) {
 		return "redirect:/admin/users";
+	}
+	
+	@RequestMapping("/admin/admin-new")
+	public String setAdminNew(Model m) {
+		return "redirect:/admin/list-admin";
 	}
 
 	@RequestMapping("/admin/user/findBy")
 	public String getUsers(Model m, @Param("id") String id, @RequestParam(defaultValue = "1") int page) {
 		Users u = ss.getAttribute("user");
 		Pageable pageable = PageRequest.of(page - 1, 4);
-		Page<Users> users = userService.findAll(u.getUsername(), pageable);
+		Page<Auth> users = authService.getAllUses(u.getUsername(), pageable);
 
 		if (ss.getAttribute("err") != null) {
 			m.addAttribute("visible", "true");
@@ -202,6 +296,28 @@ public class AdminController {
 			m.addAttribute("users", users);
 			m.addAttribute("u", userService.findById(id));
 			return "admin/users";
+		}
+	}
+	
+	@RequestMapping("/admin/user/find-by-admin")
+	public String getListAdmin(Model m, @Param("id") String id, @RequestParam(defaultValue = "1") int page) {
+		Users u = ss.getAttribute("user");
+		Pageable pageable = PageRequest.of(page - 1, 4);
+		Page<Auth> users = authService.getAllAdmin(u.getUsername(), pageable);
+
+		if (ss.getAttribute("err") != null) {
+			m.addAttribute("visible", "true");
+			m.addAttribute("title", ss.getAttribute("title"));
+			m.addAttribute("notification", ss.getAttribute("notification"));
+			m.addAttribute("users", users);
+			m.addAttribute("u", userService.findById(id));
+			ss.setAttribute("err", null);
+			return "admin/users";
+		} else {
+			m.addAttribute("visible", "false");
+			m.addAttribute("users", users);
+			m.addAttribute("u", userService.findById(id));
+			return "admin/listAdmin";
 		}
 	}
 
@@ -220,10 +336,29 @@ public class AdminController {
 		ss.setAttribute("notification", "Cập nhật thành công");
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
 	}
+	
+	@PostMapping("/admin/user/update-admin")
+	public String getAdminUpdate(Model m, Users u) {
+		m.addAttribute("users", userService.findAll());
+		Users us = userService.findById(u.getUsername());
+		Pay p = payService.findByID(us.getPay_id().getPay_id());
+		Ranks r = rankService.findById(us.getRanks_id().getRanks_id());
+		u.setPay_id(p);
+		u.setRanks_id(r);
+
+		userService.update(u);
+		m.addAttribute("u", userService.findById(u.getUsername()));
+		ss.setAttribute("err", "Error");
+		ss.setAttribute("title", "Thành công");
+		ss.setAttribute("notification", "Cập nhật thành công");
+		return "redirect:/admin/user/find-by-admin?id=" + u.getUsername();
+	}
 
 	@RequestMapping("/admin/user/delete")
-	public String setAccountUser(Model m, @Param("id") String id) {
+	public String setAccountUser(Model m, @Param("id") String id, @RequestParam("notes") String notes) throws MessagingException{
+		
 		Users u = userService.findById(id);
+		mailService.sendBlockPost(u.getEmail(), "Tài khoản của bạn đã bị quản trị viên khóa vĩnh viễn", notes);
 		u.setActive(false);
 		u.setCreate_block(new Date());
 		userService.update(u);
@@ -240,6 +375,29 @@ public class AdminController {
 		ss.setAttribute("title", "Thành công");
 		ss.setAttribute("notification", "Chặn tài khoản thành công");
 		return "redirect:/admin/user/findBy?id=" + u.getUsername();
+	}
+	
+	@RequestMapping("/admin/user/delete-admin")
+	public String setAccountAdmin(Model m, @Param("id") String id, @RequestParam("notes") String notes) throws MessagingException{
+		
+		Users u = userService.findById(id);
+		mailService.sendBlockPost(u.getEmail(), "Tài khoản của bạn đã bị quản trị viên khóa vĩnh viễn", notes);
+		u.setActive(false);
+		u.setCreate_block(new Date());
+		userService.update(u);
+		ss.setAttribute("err", "Error");
+		
+		List<Post> list = postService.getPostUser(u.getUsername());
+		
+		for(Post p : list) {
+			p.setActive(false);
+			p.setDeletedAt(true);
+			postService.Update(p);
+		}
+		
+		ss.setAttribute("title", "Thành công");
+		ss.setAttribute("notification", "Chặn tài khoản thành công");
+		return "redirect:/admin/user/find-by-admin?id=" + u.getUsername();
 	}
 	// User List
 
@@ -289,21 +447,30 @@ public class AdminController {
 	}
 
 	@RequestMapping("/admin/post-find-delete")
-	public String getPostDelete(Model m, @Param("id") Integer id) {
+	public String getPostDelete(Model m, @RequestParam("id") Integer id, @RequestParam("notes") String notes) throws MessagingException {
 
+		Post p = postService.getFindByid(id);
+		
+		mailService.sendBlockPost(p.getUsers_id().getEmail(), "Thông báo bài đăng của bạn đã bị ẩn", notes);
+		
 		postService.SoftDeletePost(id);
+		
 		ss.setAttribute("err", "Error");
 		ss.setAttribute("title", "Thành công");
 		ss.setAttribute("notification", "Xóa thành công");
+		
 		return "redirect:/admin/post";
 	}
 
 	@RequestMapping("/admin/post-find-update")
-	public String getPostUpdate(Model m, @Param("id") Integer id) {
+	public String getPostUpdate(Model m, @Param("id") Integer id, @RequestParam("notes") String notes) throws MessagingException  {
 		Post p = postService.getFindByid(id);
 		p.setActive(true);
 		p.setDeletedAt(false);
 		postService.Update(p);
+		
+		mailService.sendBlockPost(p.getUsers_id().getEmail(), "Thông báo bài đăng của bạn đã được phục hồi", notes);
+		
 		ss.setAttribute("err", "Error");
 		ss.setAttribute("title", "Thành công");
 		ss.setAttribute("notification", "Cập nhật thành công");

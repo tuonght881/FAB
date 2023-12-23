@@ -2,6 +2,7 @@
     "use strict";
 
     // Spinner
+<<<<<<< HEAD
 	var spinner = function() {
 	    // Hiển thị spinner khi trang đang tải
 	    $('#spinner').addClass('show');
@@ -13,6 +14,14 @@
 	            $('#spinner').removeClass('show');
 	        }
 	    };
+=======
+    var spinner = function() {
+        setTimeout(function() {
+            if ($('#spinner').length > 0) {
+                $('#spinner').removeClass('show');
+            }
+        }, 1);
+>>>>>>> branch 'tung' of https://github.com/tuonght881/FAB
     };
     spinner();
 
@@ -104,6 +113,20 @@
         })
         $(document).mouseup(function(e) {
             var container = $("#contactForm");
+
+            if (!container.is(e.target) &&
+                container.has(e.target).length === 0) {
+                container.fadeOut();
+            }
+        });
+    });
+
+    $(function() {
+        $('#comment').click(function() {
+            $('#commentForm').fadeToggle();
+        })
+        $(document).mouseup(function(e) {
+            var container = $("#commentForm");
 
             if (!container.is(e.target) &&
                 container.has(e.target).length === 0) {

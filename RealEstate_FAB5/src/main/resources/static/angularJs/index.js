@@ -249,6 +249,32 @@ app.controller("mycontroller", function($scope, $http, $rootScope, $window) {
 
     $scope.copyIconClass = 'fa-regular fa-copy';
 
+    $scope.getComment = function(postIdFromQueryString) {
+        $http.get(`/rest/comments?id=` + postIdFromQueryString).then(function(response) {
+            $scope.comments = response.data;
+        });
+    }
+
+    $scope.getComment(postIdFromQueryString);
+
+    $scope.createComment = function() {
+        $http.get(`/rest/user`).then(respUser => {
+            $http.get(`/post-id/` + postIdFromQueryString).then(respPost => {
+                var comment = {
+                    comments_content: $scope.comment,
+                    comments_date: new Date(),
+                    post_id: respPost.data,
+                    users: respUser.data
+                }
+
+                $http.post(`/rest/add-comment`, comment).then(respComment => {
+                    console.log(respComment.data);
+                    $scope.getComment(postIdFromQueryString);
+                })
+            });
+        });
+    }
+
     $scope.listPostHotsNew = function(postIdFromQueryString) {
         console.log(postIdFromQueryString);
         $http.get(`/rest/list-post-hot-new?id=` + postIdFromQueryString).then(function(response) {
@@ -498,7 +524,7 @@ app.controller("mycontroller", function($scope, $http, $rootScope, $window) {
 
     $scope.urlAvt = function(filename) {
         var type = null;
-        if (filename != '' && filename != type) {
+        if (filename != "" && filename != type) {
             return `${urlAvt}/${filename}`;
         } else {
             return `${urlAvt}/profile.png`;
@@ -1323,6 +1349,9 @@ app.controller("mycontroller", function($scope, $http, $rootScope, $window) {
 
 
     };
+
+
+
 
 });
 

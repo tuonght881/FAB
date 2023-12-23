@@ -252,6 +252,47 @@
                                 </div>
                                 <hr class="mb-3">
                             </div>
+                            <div class="review-list">
+                                <ul>
+                                    <div class="d-flex mb-3">
+                                        <div class="col-sm-11">
+                                            <h5>Bình luận</h5>
+                                        </div>
+                                        <div class="col" ng-show="$u">
+                                            <button class="btn btn-primary" id="comment">
+                                                <i class="fa-regular fa-comment-dots"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <li ng-repeat="comment in comments">
+                                        <div class="d-flex">
+                                            <div class="left">
+                                                <span>
+                                                    <img src="{{urlAvt(comment.users.avatar)}}" class="profile-pict-img img-fluid" alt="" />
+                                                </span>
+                                            </div>
+                                            <div class="right">
+                                                <h4>
+                                                    {{comment.users.fullname}}
+                                                </h4>
+                                                <div class="review-description">
+                                                    <p>
+                                                        {{comment.comments_content}}
+                                                    </p>
+                                                </div>
+                                                <span class="publish py-3 d-inline-block w-100">{{comment.comments_date | date:'dd-MM-yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div id="commentForm">
+                                    <form ng-submit="createComment()">
+                                        <textarea placeholder="Nội dung" name="comments_content" ng-model="comment"></textarea>
+                                        <input class="btn btn-primary" type="submit" value="Gửi" />
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <!-- Detailed article content -->
                         <!-- Extra information -->
