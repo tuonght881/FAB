@@ -68,6 +68,44 @@ public class MailerService{
 		sender.send(message);
 	}
 	
+	public void sendBlockPost(MailInfo mail) throws MessagingException {
+		MimeMessage message = sender.createMimeMessage();
+
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+		
+		Context context = new Context();
+		context.setVariable("subject", mail.getSubject());
+        context.setVariable("content", mail.getBody());
+        String html = templateEngine.process("email/blockPost", context);
+
+		
+		helper.setFrom(mail.getFrom());
+		helper.setTo(mail.getTo());
+		helper.setSubject(mail.getSubject());
+		helper.setText(html, true);
+		helper.setReplyTo(mail.getFrom());
+
+		String[] cc = mail.getCc();
+		if (cc != null && cc.length > 0) {
+			helper.setCc(cc);
+		}
+
+		String[] bcc = mail.getBcc();
+		if (bcc != null && bcc.length > 0) {
+			helper.setBcc(bcc);
+		}
+
+		String[] attachments = mail.getAttachments();
+		if (attachments != null && attachments.length > 0) {
+			for (String path : attachments) {
+				File file = new File(path);
+				helper.addAttachment(file.getName(), file);
+			}
+		}
+
+		sender.send(message);
+	}
+	
 	public void sendContact(MailContact mail) throws MessagingException {
 		MimeMessage message = sender.createMimeMessage();
 
@@ -269,6 +307,10 @@ public class MailerService{
 	
 	public void send(String to, String subject, String body) throws MessagingException {
 		this.send(new MailInfo(to, subject, body));
+	}
+	
+	public void sendBlockPost(String to, String subject, String body) throws MessagingException {
+		this.sendBlockPost(new MailInfo(to, subject, body));
 	}
 	
 	public void sendEmailContact(String to, String subject, String body, String fullNameTo, String fullNameFrom, String phone) throws MessagingException {

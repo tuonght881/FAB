@@ -35,10 +35,35 @@
                                     <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> Chi tiết
                                 </a>
                                 <span style="font-size: 25px; color: black; margin: 0 5px;" th:attr="hidden=${p.users_id.active ? null : 'hidden'}">|</span>
-                                <a type="button" th:href="@{'/admin/post-find-update?id=' + ${p.post_id}}" class="btn btn-primary" style="width: 150px;" th:attr="hidden=${p.users_id.active ? null : 'hidden'}">
+                                <a type="button" class="btn btn-primary" style="width: 150px;" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-' + ${state.index}">
                                     <i class="fa-solid fa-notes-medical"></i> Phục hồi
                                 </a>
                             </td>
+                            <div class="modal fade" th:id="'exampleModal-'+ ${state.index}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="/admin/post-find-update" method="post" id="postRecovery">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Lý do phục hồi bài đăng</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="text" name="id" th:value="${p.post_id}" hidden>
+                                                <input type="text" class="form-control" th:value="${state.index + 1}" readonly>
+                                                <br>
+                                                <textarea name="notes" id="notes" class="form-control" placeholder="Lý do chặn bài..."></textarea>
+                                                <span class="form-message item3" style="color: #ff0000; margin-top: 5px;"></span>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                                                <button type="submit" class="btn btn-primary">Đồng ý</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
 
                     </tbody>
@@ -220,6 +245,17 @@
                     </form>
                 </div>
             </div>
+
+            <script src="/js/validator.js"></script>
+            <script type="text/javascript">
+                Validator({
+                    form: '#postRecovery',
+                    errorSelector: '.form-message',
+                    rules: [
+                        Validator.isRequired('#notes', 'Vui lòng nhập lý do'),
+                    ]
+                });
+            </script>
         </div>
     </main>
 </body>

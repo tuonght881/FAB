@@ -118,7 +118,7 @@
     --bs-tertiary-color-rgb: 90, 106, 133;
     --bs-tertiary-bg: #F8F1F1;
     --bs-tertiary-bg-rgb: 246, 249, 252;
-    --bs-body-bg: #fff;
+    --bs-body-bg: hsl(0, 0%, 100%);
     --bs-body-bg-rgb: 255, 255, 255;
     --bs-heading-color: #2A3547;
     --bs-link-color: #E57C23;

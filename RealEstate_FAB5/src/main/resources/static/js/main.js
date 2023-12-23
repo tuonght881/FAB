@@ -2,7 +2,7 @@
     "use strict";
 
     // Spinner
-	var spinner = function() {
+    var spinner = function() {
         setTimeout(function() {
             if ($('#spinner').length > 0) {
                 $('#spinner').removeClass('show');
@@ -99,6 +99,20 @@
         })
         $(document).mouseup(function(e) {
             var container = $("#contactForm");
+
+            if (!container.is(e.target) &&
+                container.has(e.target).length === 0) {
+                container.fadeOut();
+            }
+        });
+    });
+
+    $(function() {
+        $('#comment').click(function() {
+            $('#commentForm').fadeToggle();
+        })
+        $(document).mouseup(function(e) {
+            var container = $("#commentForm");
 
             if (!container.is(e.target) &&
                 container.has(e.target).length === 0) {

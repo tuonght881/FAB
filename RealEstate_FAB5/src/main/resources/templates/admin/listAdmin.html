@@ -57,7 +57,7 @@
                             <div class="modal fade" th:id="'exampleModal-'+ ${state.index}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form action="/admin/user/delete" method="post" id="postRecovery">
+                                        <form action="/admin/user/delete-admin" method="post" id="postRecovery">
 
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Lý do chặn tài khoản</h5>
@@ -85,7 +85,7 @@
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="/admin/add-user" method="post" id="adduser">
+                            <form action="/admin/add-admin" method="post" id="adduser">
                                 <div class="modal-header">
                                     <h4 class="modal-title">Thêm tài khoản người dùng</h4>
                                 </div>
@@ -118,13 +118,13 @@
                                     <div class="form-group">
                                         <label>Vai trò</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="role" value="admin" id="flexRadioDefault1">
+                                            <input class="form-check-input" type="radio" name="role" value="admin" id="flexRadioDefault1" checked>
                                             <label class="form-check-label" for="flexRadioDefault1">
                                               Quản trị viên
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="role" value="user" id="flexRadioDefault2" checked>
+                                            <input class="form-check-input" type="radio" name="role" value="user" id="flexRadioDefault2">
                                             <label class="form-check-label" for="flexRadioDefault2">
                                               Người dùng
                                             </label>
@@ -165,7 +165,7 @@
                     </div>
                     <script th:inline="javascript">
                         function changePage(page) {
-                            window.location.href = '/admin/users?page=' + page;
+                            window.location.href = '/admin/list-admin?page=' + page;
                         }
                     </script>
                 </div>

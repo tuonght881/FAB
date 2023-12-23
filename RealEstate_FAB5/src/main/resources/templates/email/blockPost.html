@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        strong {
+            color: #787878;
+            font-size: 20px;
+        }
+        
+        h2 {
+            color: rgb(255, 157, 37);
+        }
+    </style>
+</head>
+
+<body>
+    <strong>Real Estate</strong>
+    <h2 th:utext="${subject}"></h2>
+    <p>
+        <span th:utext="${content}"></span>
+        <br> <br> Nếu bạn có thắc mắc gì về vụ việc này hãy gửi email liên hệ qua thông trang web Real Estate.
+        <br> <br> Cảm ơn,
+        <br> <br> Nhóm tài khoản Real Estate.
+    </p>
+</body>
+
+</html>
